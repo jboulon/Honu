@@ -1,0 +1,26 @@
+Honu
+Honu a large scale streaming data collection and processing pipeline build in the cloud for the cloud.
+
+Netflix moved a large portion of their infrastructure to the cloud in order to meet our reliability, scalability and availability requirements.
+As we solved our reliability, scalability and availability requirements on the application side, we open a new range of challenging problem on the log analytics side.
+As the number of instances running in the cloud increase, standard way of moving log files or loading log events to a database starts saturating the system. As the volume explode, the latency/thruput of the system becomes so slow that it was not usable for our operational/BI needs.
+
+Honu is the new streaming log collection and processing pipeline in the cloud for Netflix and leverage the computational power of Hadoop/Hive to solve our log analytics requirements.
+
+Honu solution includes three main components:
+- A client side SDK
+- A collector, server side component to receive all logs events
+- A Map/Reduce to process/parse those logs and save them in Hive format.
+
+The client side SDK provides all the classes you need in order to generate/collect your unstructured and structured log events on your application.
+Honu collectors are a key component and are responsible for continuously saving log Events to HDFS.
+The Map/Reduce is responsible for parsing log events and storing them in their corresponding Hive table format.
+
+The presentation will explain how we are using those components in order to generate, collect and process all the unstructured and structured log events and make them available to our end-user through Hive.
+
+Honu will be released under the standard Apache license and will be hosted for now in gitHub.
+Honu has been running in production at Netflix for more than 6 months and have some specific integrations to leverage the Amazon EC2, S3 and EMR infrastructure.
+
+More information can be found here: http://wiki.github.com/jboulon/Honu
+Jerome Boulon – jboulon@apache.org
+

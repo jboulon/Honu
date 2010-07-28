@@ -1,0 +1,112 @@
+#!/bin/bash
+#
+# Honu-Collector startup script for Honu-collector
+#
+# chkconfig: - 99 10
+# description: Honu Collector
+# processname: java
+# pidfile: /apps/honuCollector/logs/honu.pid
+
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+#set -x
+
+honu=/apps/honucollector/bin/thrift-collector.sh
+base=`dirname $honu`
+prog=honucollector
+logdir="${base}/../logs"
+
+if [ -f ${base}/setenv.sh ]; then
+	. ${base}/setenv.sh
+fi
+
+pidfile="${logdir}/collector.pid"
+lockfile="${logdir}/.collector.lock"
+RETVAL=0
+
+
+
+typeset -x `stat --printf "userowner=%U\ngroupowner=%G\n" $honu`
+
+WHO=`whoami`
+
+DoIt(){
+#
+# This is so that the root user can start/stop
+# on system run-level transitions
+#
+
+  if [ "$WHO" == "root" ]; then
+     su - $userowner -c "$*"
+      elif [ "$WHO" == "$userowner" ]; then
+       exec  "$@"
+     else
+      echo "must be root or $userowner to run $@"
+    exit 1
+     fi
+}
+
+# The semantics of these two functions differ from the way apachectl does
+# things -- attempting to start while running is a failure, and shutdown
+# when not running is also a failure.  So we just do it the way init scripts
+# are expected to behave here.
+start() {
+        echo -n $"Starting $prog: "
+        DoIt $honu
+        RETVAL=$?
+        if [ $RETVAL = 0 ]; then
+		DoIt touch ${lockfile}
+		success $"$prog started." 
+	else
+		failure $"$prog failed to start"
+	fi
+        echo
+        return $RETVAL
+}
+
+stop() {
+        echo -n $"Stopping $prog: "
+	test -f $pidfile && kill `cat $pidfile`
+        RETVAL=$?
+        if [ $RETVAL = 0 ]; then
+		DoIt rm -f ${lockfile} ${pidfile}
+		success $"$prog stopped."
+	else
+		failure $"$prog failed to stop"
+	fi
+        echo
+        return $RETVAL
+}
+
+# See how we were called.
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  status)
+        status -p $pidfile $honu
+        RETVAL=$?
+        ;;
+  restart)
+        stop
+        start
+        ;;
+  condrestart)
+        if [ -f ${pidfile} ] ; then
+                stop
+                start
+        fi
+        ;;
+
+  *)
+        echo $"Usage: $prog {start|stop|restart}"
+        exit 1
+esac
+
+exit $RETVAL
+

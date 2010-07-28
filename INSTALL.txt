@@ -1,0 +1,28 @@
+Honu quick start:
+
+Howto build Honu?
+ant clean honu_dist
+
+Howto start a collector?
+cd build/honu-0.3.0; ./bin/thrift-collector.sh;  tail -f logs/collector-stdout.log 
+
+Howto stop a collector?
+./bin/thrift-collector.sh stop
+
+Howto test Honu?
+- Start a collector from one terminal:
+  cd build/honu-0.3.0; export HONU_MODE=debug;./bin/thrift-collector.sh; tail -f logs/collector-stdout.log
+
+- Start the HelloWorld client from another terminal:
+  cd build/honu-0.3.0-examples;./bin/helloWorld.sh 
+
+You should see your data in your collector log.
+- DataSink files will be written to /honu/dataSink/defaultGroup/finalOutputDir/
+- DataSink files are compatible with another open source project: CHUKWA
+
+Components that I'm not using at Netflix:
+- Tracer & Counter
+- Discovery Service
+
+ML: http://groups.google.com/group/honu-dev
+

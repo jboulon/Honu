@@ -1,0 +1,50 @@
+## Command to generate Java code
+## thrift  --gen java:beans,hashcode Chunk.idl
+
+namespace java org.honu.thrift
+
+enum ServiceStatus {
+  DEAD = 0,
+  STARTING = 1,
+  ALIVE = 2,
+  STOPPING = 3,
+  STOPPED = 4,
+  WARNING = 5,
+}
+
+enum ResultCode
+{
+  OK,
+  TRY_LATER
+}
+
+ struct Result
+{
+  1: ResultCode resultCode,
+  2: string message
+}
+
+struct TChunk
+{
+  1:  string source,
+  2:  string streamName,
+  3:  string application,
+  4:  string dataType,
+  5:  string tags,
+  6:  i64 seqId,
+  7:  list<string> logEvents
+}
+
+service HonuService {
+   i64 shutdown();	
+   string getName();
+   ServiceStatus getStatus(),
+   string getVersion(),
+   i64 getUptime(),
+   i64 getCounter(1: string key)
+ }
+ 
+service HonuCollector extends HonuService{
+  Result process(1: TChunk tChunk);
+
+}

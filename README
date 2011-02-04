@@ -19,7 +19,8 @@ The Map/Reduce is responsible for parsing log events and storing them in their c
 The presentation will explain how we are using those components in order to generate, collect and process all the unstructured and structured log events and make them available to our end-user through Hive.
 
 Honu will be released under the standard Apache license and will be hosted for now in gitHub.
-Honu has been running in production at Netflix for more than 6 months and have some specific integrations to leverage the Amazon EC2, S3 and EMR infrastructure.
+Honu has been running in production at Netflix for more than a year and have some specific integrations to leverage the Amazon EC2, S3 and EMR infrastructure.
+Honu is globally used at Netflix , handling more use cases everyday and collecting over 12 billions of messages a day.
 
 More information can be found here: http://wiki.github.com/jboulon/Honu
 Jerome Boulon – jboulon@apache.org
